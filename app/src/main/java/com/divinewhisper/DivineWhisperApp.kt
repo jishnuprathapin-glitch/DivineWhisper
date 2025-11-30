@@ -2,7 +2,6 @@ package com.divinewhisper
 
 import android.app.Application
 import androidx.work.Configuration
-import androidx.work.WorkManager
 
 /**
  * Application entry point used for initializing lazy singletons and
