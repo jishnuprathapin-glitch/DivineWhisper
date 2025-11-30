@@ -24,6 +24,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
@@ -32,6 +33,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -146,6 +148,8 @@ private fun IntroScreen() {
 
                         SerenityHighlights()
 
+                        CalmAmbienceCard()
+
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
                                 text = "Divine Whisper",
@@ -238,6 +242,85 @@ private fun SerenityHighlights() {
         BadgeLabel(text = "Daily calm")
         GradientChip(text = "Guided focus", colors = listOf(colors.primary, colors.secondary))
         GradientChip(text = "Soft reminders", colors = listOf(colors.secondary, colors.primary))
+    }
+}
+
+@Composable
+private fun CalmAmbienceCard() {
+    val colors = MaterialTheme.colorScheme
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = colors.surface.copy(alpha = 0.9f)),
+        shape = RoundedCornerShape(20.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(horizontal = 18.dp, vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Text(
+                        text = "Calm ambience",
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
+                        color = colors.onSurface
+                    )
+                    Text(
+                        text = "Gentle tone, softer alerts, serene screens",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = colors.onSurface.copy(alpha = 0.7f)
+                    )
+                }
+                Surface(
+                    shape = RoundedCornerShape(50),
+                    color = colors.primary.copy(alpha = 0.12f),
+                    shadowElevation = 0.dp
+                ) {
+                    Text(
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                        text = "Live",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = colors.primary
+                    )
+                }
+            }
+
+            LinearProgressIndicator(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(8.dp)
+                    .clip(RoundedCornerShape(50)),
+                progress = 0.7f,
+                color = colors.primary,
+                trackColor = colors.onSurface.copy(alpha = 0.08f)
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                GradientChip(text = "Focus bubble", colors = listOf(colors.primary, colors.secondary))
+                HighlightPill(text = "Do not disturb light")
+            }
+
+            Surface(
+                shape = RoundedCornerShape(14.dp),
+                color = colors.secondary.copy(alpha = 0.12f),
+                tonalElevation = 0.dp,
+                shadowElevation = 0.dp
+            ) {
+                Text(
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
+                    text = "Soft background chimes will wrap reminders in a calm fade.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = colors.onSurface.copy(alpha = 0.82f)
+                )
+            }
+        }
     }
 }
 
@@ -665,28 +748,54 @@ private fun ReflectionCard() {
                 Surface(
                     modifier = Modifier.weight(1f),
                     shape = RoundedCornerShape(12.dp),
-                    color = colors.primary.copy(alpha = 0.08f),
+                    color = Color.Transparent,
+                    border = ButtonDefaults.outlinedButtonBorder.copy(
+                        brush = Brush.linearGradient(listOf(colors.primary.copy(alpha = 0.4f), colors.secondary.copy(alpha = 0.35f)))
+                    ),
                     shadowElevation = 0.dp
                 ) {
-                    Text(
-                        modifier = Modifier.padding(vertical = 10.dp, horizontal = 12.dp),
-                        text = "Open journal",
-                        style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold),
-                        color = colors.primary.copy(alpha = 0.96f)
-                    )
+                    Box(
+                        modifier = Modifier
+                            .background(
+                                brush = Brush.linearGradient(
+                                    listOf(colors.primary.copy(alpha = 0.16f), colors.secondary.copy(alpha = 0.12f))
+                                ),
+                                shape = RoundedCornerShape(12.dp)
+                            )
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(vertical = 10.dp, horizontal = 12.dp),
+                            text = "Open journal",
+                            style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold),
+                            color = colors.primary.copy(alpha = 0.96f)
+                        )
+                    }
                 }
                 Surface(
                     modifier = Modifier.weight(1f),
                     shape = RoundedCornerShape(12.dp),
-                    color = colors.secondary.copy(alpha = 0.18f),
+                    color = Color.Transparent,
+                    border = ButtonDefaults.outlinedButtonBorder.copy(
+                        brush = Brush.linearGradient(listOf(colors.secondary.copy(alpha = 0.5f), colors.primary.copy(alpha = 0.25f)))
+                    ),
                     shadowElevation = 0.dp
                 ) {
-                    Text(
-                        modifier = Modifier.padding(vertical = 10.dp, horizontal = 12.dp),
-                        text = "Schedule reminder",
-                        style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold),
-                        color = colors.onSurface.copy(alpha = 0.9f)
-                    )
+                    Box(
+                        modifier = Modifier
+                            .background(
+                                brush = Brush.linearGradient(
+                                    listOf(colors.secondary.copy(alpha = 0.22f), colors.primary.copy(alpha = 0.12f))
+                                ),
+                                shape = RoundedCornerShape(12.dp)
+                            )
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(vertical = 10.dp, horizontal = 12.dp),
+                            text = "Schedule reminder",
+                            style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold),
+                            color = colors.onSurface.copy(alpha = 0.9f)
+                        )
+                    }
                 }
             }
         }
