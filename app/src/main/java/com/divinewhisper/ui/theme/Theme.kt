@@ -34,7 +34,7 @@ fun DivineWhisperTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = MaterialTheme.typography,
+        typography = Typography,
         content = content
     )
 }
