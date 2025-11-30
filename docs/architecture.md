@@ -9,6 +9,14 @@ This document describes how to build **Divine Whisper**, an offline Android app 
 - **Scheduling**: WorkManager for periodic work; exact alarms (AlarmManager) only if truly needed for precise delivery windows.
 - **Min API**: 24+ recommended to leverage modern scheduling and notification APIs.
 
+### Suggested module/layer split
+- **core/model**: enums (`Source`), data classes (preferences, verse summaries), and date/time helpers.
+- **core/database**: Room setup, DAOs, and the packaged asset installer/validator.
+- **feature/notifications**: workers, notification builder, quiet-hours checks, and logging.
+- **feature/settings**: UI screens for cadence, sources, and quiet hours plus `UserPrefs` use-cases.
+- **feature/onboarding**: the 4-step flow with persistent state that can be resumed if backgrounded.
+- **design-system**: typography, color tokens, and reusable components (verse card, slider rows, time pickers).
+
 ## Data model (Room entities)
 - `VerseEntity`: `id`, `source` (`BIBLE`, `QURAN`, `GITA`), `book`, `chapter`, `verse_number`, `text`, `tags`, `popularity_score`, `length_bucket`.
 - `UserPrefsEntity`: `id=0`, `sources_enabled` (bitmask or JSON), `frequency_per_day`, `window_start_minutes`, `window_end_minutes`, `min_gap_minutes`, `quiet_hours` (optional), `last_onboarding_version`.
@@ -27,6 +35,7 @@ This document describes how to build **Divine Whisper**, an offline Android app 
    - Selects a verse: filter by enabled sources, exclude recent IDs, prefer shorter-to-medium length, sample with a light weight on `popularity_score`, then randomize.
    - Logs the selection, posts the notification, and schedules a replacement if constraints changed.
 4. On device reboot, listen for `BOOT_COMPLETED` and re-seed the day's work.
+5. Respect **Do Not Disturb** and battery optimizations; surface a non-blocking prompt if delivery is restricted and back off automatically.
 
 ### Defaults (psychology-informed)
 - Frequency: **2–3 per day** (balanced). Start at 2 if onboarding skipped.
@@ -46,6 +55,8 @@ This document describes how to build **Divine Whisper**, an offline Android app 
 - Provide a **Snooze/remind tomorrow** action inside the app to respect user autonomy.
 - Include dark mode and gentle color palette; avoid heavy iconography to keep focus on text.
 - Avoid streaks or pressure mechanics; instead, occasional gratitude prompts inside the app (never on every notification).
+- Keep accessibility in mind: minimum 14sp body text, semantic titles, and high-contrast color pairs for notification accents and in-app surfaces.
+- Add a lightweight “Why this verse?” footer in the detail view explaining source and tags to reinforce trust without breaking flow.
 
 ## Settings & controls
 - Per-source toggles with a summary of current cadence (e.g., "3/day between 9a–8p, min gap 3h").
@@ -59,6 +70,7 @@ This document describes how to build **Divine Whisper**, an offline Android app 
 ## Extensibility
 - Add new sources by extending the `source` enum and providing a new table in the prepackaged DB.
 - Add optional tag-based recommendation (e.g., "morning encouragement" vs. "evening reflection") using weighted sampling over `tags`.
+- Expose a clean API around verse retrieval so that future features (e.g., bookmarks, search) can reuse filtering and logging logic.
 
 ## Build-time safeguards (high level)
 - Include checksums for each verse row to detect corruption.

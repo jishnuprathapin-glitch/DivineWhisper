@@ -16,6 +16,8 @@ The app should ship with **locally stored English translations** of at least **2
 4. **Length bucket**: bucket verses as `short`/`medium`/`long` to bias notifications toward concise content.
 5. **Popularity score**: optional heuristic (e.g., curated list) to weight sampling.
 6. **Export to SQLite**: build a prepackaged Room database asset with three tables (one per source or a unified table with a `source` column).
+7. **Diffable outputs**: emit stable, sorted CSV/JSON alongside the SQLite asset so reviewers can diff content changes in PRs.
+8. **Reproducible scripts**: pin Python package versions (requirements.txt) or Gradle tool versions; run scripts inside a container to avoid locale drift.
 
 ## Integrity checks (automated)
 - **Row counts**: assert ≥20,000 verses per source before publishing.
@@ -23,6 +25,8 @@ The app should ship with **locally stored English translations** of at least **2
 - **Schema validation**: run `PRAGMA integrity_check` on the packaged SQLite file.
 - **Sampling test**: pick random verses per source; ensure hashes and metadata match manifests.
 - **Deterministic build**: make preprocessing scripts idempotent and commit lockfiles/versions of tooling.
+- **Duplicate detection**: assert that (`source`, `book`, `chapter`, `verse_number`) is unique and that verse text is not duplicated across nearby references unless the canonical text requires it.
+- **Audit trail**: retain a build log artifact that records manifest versions, script versions, and hash summaries per source.
 
 ## Delivery integrity at runtime
 - Store a small checksum of the packaged database and validate it on first launch; if invalid, pause scheduling and prompt the user to reinstall.
@@ -40,6 +44,7 @@ manifests/
   gita_manifest.csv
 scripts/
   preprocess.py (or Kotlin/JVM)  # produces packaged_db.db and manifest hashes
+  diff_manifest.py  # emits per-source diffs and verifies duplicate/row-count rules
 assets/
   packaged_db.db
 LICENSES/
