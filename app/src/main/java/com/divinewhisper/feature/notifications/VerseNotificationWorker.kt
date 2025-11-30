@@ -15,8 +15,8 @@ import com.divinewhisper.R
 import com.divinewhisper.core.database.DivineWhisperDatabase
 import com.divinewhisper.core.database.ShownLogEntity
 import com.divinewhisper.feature.settings.UserPreferencesRepository
-import java.time.Duration
 import java.util.UUID
+import java.util.concurrent.TimeUnit
 
 class VerseNotificationWorker(
     appContext: Context,
@@ -74,7 +74,7 @@ class VerseNotificationWorker(
 
         fun scheduleOnce(context: Context, delayMinutes: Long = 0): UUID {
             val request: WorkRequest = OneTimeWorkRequestBuilder<VerseNotificationWorker>()
-                .setInitialDelay(Duration.ofMinutes(delayMinutes))
+                .setInitialDelay(delayMinutes, TimeUnit.MINUTES)
                 .addTag(WORK_TAG)
                 .build()
             WorkManager.getInstance(context).enqueue(request)

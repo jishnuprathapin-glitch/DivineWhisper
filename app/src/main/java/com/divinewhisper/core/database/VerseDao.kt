@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.divinewhisper.core.model.Source
 
 @Dao
 interface VerseDao {
@@ -18,7 +19,7 @@ interface VerseDao {
         """
     )
     suspend fun getEligibleVerses(
-        sources: List<String>,
+        sources: List<Source>,
         excludedIds: List<Long>,
         lengthBuckets: List<String>,
         limit: Int
