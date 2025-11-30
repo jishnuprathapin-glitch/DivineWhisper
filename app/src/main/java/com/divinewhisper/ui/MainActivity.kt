@@ -185,6 +185,10 @@ private fun IntroScreen() {
 
                         CalmRoutine()
 
+                        ImmersiveMoments()
+
+                        DailyFocusStrip()
+
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -592,6 +596,280 @@ private fun CalmRoutine() {
             subtitle = "Slow down with a verse that soothes",
             badge = "Wind down",
             accent = colors.primary.copy(alpha = 0.5f)
+        )
+    }
+}
+
+@Composable
+private fun ImmersiveMoments() {
+    val colors = MaterialTheme.colorScheme
+
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text(
+                    text = "Set the tone",
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
+                    color = colors.onSurface
+                )
+                Text(
+                    text = "Pair today's verse with a soundscape that mirrors your pace.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = colors.onSurface.copy(alpha = 0.72f)
+                )
+            }
+
+            HighlightPill(text = "New mixes")
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            ImmersiveCard(
+                modifier = Modifier.weight(1f),
+                title = "Morning hush",
+                subtitle = "Soft strings with distant rain for gentle focus.",
+                badge = "12 min drift",
+                accent = listOf(colors.primary.copy(alpha = 0.6f), colors.secondary.copy(alpha = 0.5f))
+            )
+
+            ImmersiveCard(
+                modifier = Modifier.weight(1f),
+                title = "Twilight glow",
+                subtitle = "Warm pads, low bells, and a whisper-quiet timer.",
+                badge = "8 min wind down",
+                accent = listOf(colors.secondary.copy(alpha = 0.55f), colors.primary.copy(alpha = 0.4f))
+            )
+        }
+    }
+}
+
+@Composable
+private fun ImmersiveCard(
+    modifier: Modifier = Modifier,
+    title: String,
+    subtitle: String,
+    badge: String,
+    accent: List<Color>
+) {
+    val colors = MaterialTheme.colorScheme
+
+    Card(
+        modifier = modifier,
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = colors.surface.copy(alpha = 0.92f)),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .background(
+                    brush = Brush.linearGradient(accent),
+                    shape = RoundedCornerShape(20.dp)
+                )
+                .border(
+                    width = 1.dp,
+                    brush = Brush.linearGradient(
+                        listOf(colors.onSurface.copy(alpha = 0.05f), colors.onSurface.copy(alpha = 0.08f))
+                    ),
+                    shape = RoundedCornerShape(20.dp)
+                )
+                .padding(horizontal = 16.dp, vertical = 18.dp)
+        ) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Text(
+                            text = title,
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                            color = colors.onPrimary
+                        )
+                        Text(
+                            text = subtitle,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = colors.onPrimary.copy(alpha = 0.9f)
+                        )
+                    }
+                    Surface(
+                        shape = RoundedCornerShape(50),
+                        color = colors.onPrimary.copy(alpha = 0.16f),
+                        shadowElevation = 0.dp
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                            text = badge,
+                            style = MaterialTheme.typography.labelLarge,
+                            color = colors.onPrimary
+                        )
+                    }
+                }
+
+                Divider(color = colors.onPrimary.copy(alpha = 0.2f))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Fade-in enabled",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = colors.onPrimary.copy(alpha = 0.9f)
+                    )
+                    Text(
+                        text = "Tap to preview",
+                        style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold),
+                        color = colors.onPrimary
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun DailyFocusStrip() {
+    val colors = MaterialTheme.colorScheme
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(18.dp),
+        colors = CardDefaults.cardColors(containerColor = colors.surface.copy(alpha = 0.94f)),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(horizontal = 18.dp, vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Text(
+                        text = "Today's flow",
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
+                        color = colors.onSurface
+                    )
+                    Text(
+                        text = "Peek at how your reminders support each rhythm.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = colors.onSurface.copy(alpha = 0.72f)
+                    )
+                }
+
+                HighlightPill(text = "Aligned")
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                FocusMoment(
+                    modifier = Modifier.weight(1f),
+                    title = "Slow morning",
+                    subtitle = "Warm light + soft scripture whisper",
+                    progress = 0.62f,
+                    accent = colors.primary
+                )
+                FocusMoment(
+                    modifier = Modifier.weight(1f),
+                    title = "Steady noon",
+                    subtitle = "Pause for gratitude and a deep breath",
+                    progress = 0.48f,
+                    accent = colors.secondary
+                )
+                FocusMoment(
+                    modifier = Modifier.weight(1f),
+                    title = "Unwind",
+                    subtitle = "Dim the screen and slow notifications",
+                    progress = 0.82f,
+                    accent = colors.primary.copy(alpha = 0.8f)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun FocusMoment(
+    modifier: Modifier = Modifier,
+    title: String,
+    subtitle: String,
+    progress: Float,
+    accent: Color
+) {
+    val colors = MaterialTheme.colorScheme
+
+    Column(
+        modifier = modifier
+            .background(
+                brush = Brush.verticalGradient(
+                    listOf(accent.copy(alpha = 0.12f), colors.surface)
+                ),
+                shape = RoundedCornerShape(14.dp)
+            )
+            .border(
+                width = 1.dp,
+                color = accent.copy(alpha = 0.24f),
+                shape = RoundedCornerShape(14.dp)
+            )
+            .padding(horizontal = 12.dp, vertical = 10.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.SemiBold),
+                color = colors.onSurface
+            )
+            Surface(
+                shape = RoundedCornerShape(50),
+                color = accent.copy(alpha = 0.18f),
+                shadowElevation = 0.dp
+            ) {
+                Text(
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                    text = "Live",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = colors.onSurface
+                )
+            }
+        }
+
+        Text(
+            text = subtitle,
+            style = MaterialTheme.typography.bodyMedium,
+            color = colors.onSurface.copy(alpha = 0.72f)
+        )
+
+        LinearProgressIndicator(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(6.dp)
+                .clip(RoundedCornerShape(20.dp)),
+            progress = progress,
+            color = accent,
+            trackColor = colors.onSurface.copy(alpha = 0.08f)
         )
     }
 }
