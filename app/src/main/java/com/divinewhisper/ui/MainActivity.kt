@@ -23,15 +23,17 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -68,19 +70,19 @@ private fun IntroScreen() {
                     )
                 )
             )
-            .padding(24.dp)
+                .padding(horizontal = 20.dp, vertical = 26.dp)
     ) {
         GlowLayer(
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .offset(x = 64.dp, y = (-48).dp),
-            colors = listOf(colors.secondary.copy(alpha = 0.25f), Color.Transparent)
+                .offset(x = 90.dp, y = (-52).dp),
+            colors = listOf(colors.secondary.copy(alpha = 0.28f), Color.Transparent)
         )
         GlowLayer(
             modifier = Modifier
                 .align(Alignment.BottomStart)
-                .offset(x = (-72).dp, y = 80.dp),
-            colors = listOf(colors.primary.copy(alpha = 0.22f), Color.Transparent)
+                .offset(x = (-88).dp, y = 90.dp),
+            colors = listOf(colors.primary.copy(alpha = 0.28f), Color.Transparent)
         )
 
         Box(
@@ -91,18 +93,18 @@ private fun IntroScreen() {
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .shadow(elevation = 18.dp, shape = RoundedCornerShape(26.dp)),
+                    .shadow(elevation = 22.dp, shape = RoundedCornerShape(28.dp)),
                 colors = CardDefaults.cardColors(
-                    containerColor = colors.surface.copy(alpha = 0.94f)
+                    containerColor = colors.surface.copy(alpha = 0.96f)
                 ),
-                shape = RoundedCornerShape(26.dp),
+                shape = RoundedCornerShape(28.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 24.dp, vertical = 28.dp),
-                    verticalArrangement = Arrangement.spacedBy(18.dp),
+                        .padding(horizontal = 26.dp, vertical = 30.dp),
+                    verticalArrangement = Arrangement.spacedBy(20.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Row(
@@ -111,48 +113,32 @@ private fun IntroScreen() {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         BadgeLabel(text = "Calm & clarity")
-                        Text(
-                            text = "Offline first",
-                            style = MaterialTheme.typography.labelLarge,
-                            color = colors.onSurface.copy(alpha = 0.7f)
-                        )
+                        HighlightPill(text = "Offline first")
                     }
 
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
                             text = "Divine Whisper",
-                            style = MaterialTheme.typography.headlineMedium,
+                            style = MaterialTheme.typography.headlineMedium.copy(fontSize = 32.sp),
                             fontWeight = FontWeight.ExtraBold,
                             textAlign = TextAlign.Center
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
                             text = "Your daily sanctuary for verses, reflection prompts, and gentle reminders that honor your pace.",
-                            style = MaterialTheme.typography.bodyLarge,
+                            style = MaterialTheme.typography.bodyLarge.copy(lineHeight = 24.sp),
                             textAlign = TextAlign.Center,
-                            color = colors.onSurface.copy(alpha = 0.8f)
+                            color = colors.onSurface.copy(alpha = 0.78f)
                         )
                     }
 
                     VerseCard()
 
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        HighlightPill(text = "Curated verses")
-                        HighlightPill(text = "Smart reminders")
-                    }
+                    Divider(color = colors.onSurface.copy(alpha = 0.08f))
 
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        HighlightPill(text = "Offline ready")
-                        HighlightPill(text = "Personal pace")
-                    }
+                    MetricsRow()
+
+                    CalmRoutine()
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -170,27 +156,21 @@ private fun IntroScreen() {
                             Text(text = "Begin your journey")
                         }
 
-                        Surface(
+                        OutlinedButton(
                             modifier = Modifier.weight(1f),
+                            onClick = { /* TODO: hook into preview */ },
                             shape = RoundedCornerShape(16.dp),
-                            tonalElevation = 2.dp,
-                            shadowElevation = 0.dp,
-                            color = colors.secondary.copy(alpha = 0.18f),
-                            contentColor = colors.onSecondary
-                        ) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 12.dp, horizontal = 16.dp),
-                                horizontalArrangement = Arrangement.Center,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    text = "Preview today's verse",
-                                    style = MaterialTheme.typography.labelLarge,
-                                    color = colors.onSurface
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                containerColor = colors.secondary.copy(alpha = 0.14f),
+                                contentColor = colors.onSurface
+                            ),
+                            border = ButtonDefaults.outlinedButtonBorder.copy(
+                                brush = Brush.linearGradient(
+                                    listOf(colors.secondary.copy(alpha = 0.5f), colors.primary.copy(alpha = 0.3f))
                                 )
-                            }
+                            )
+                        ) {
+                            Text(text = "Preview today's verse")
                         }
                     }
                 }
@@ -213,6 +193,153 @@ private fun HighlightPill(text: String) {
             borderColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.45f)
         )
     )
+}
+
+@Composable
+private fun MetricsRow() {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        MetricCard(
+            modifier = Modifier.weight(1f),
+            label = "Days with calm",
+            value = "14",
+            hint = "Steady streak"
+        )
+        MetricCard(
+            modifier = Modifier.weight(1f),
+            label = "Reminders",
+            value = "3x daily",
+            hint = "Tailored to your rhythm"
+        )
+    }
+}
+
+@Composable
+private fun MetricCard(modifier: Modifier = Modifier, label: String, value: String, hint: String) {
+    val colors = MaterialTheme.colorScheme
+    Surface(
+        modifier = modifier,
+        shape = RoundedCornerShape(18.dp),
+        tonalElevation = 2.dp,
+        shadowElevation = 0.dp,
+        color = colors.secondary.copy(alpha = 0.16f)
+    ) {
+        Column(
+            modifier = Modifier.padding(vertical = 14.dp, horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelLarge,
+                color = colors.onSurface.copy(alpha = 0.72f)
+            )
+            Text(
+                text = value,
+                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                color = colors.onSurface
+            )
+            Text(
+                text = hint,
+                style = MaterialTheme.typography.labelMedium,
+                color = colors.onSurface.copy(alpha = 0.68f)
+            )
+        }
+    }
+}
+
+@Composable
+private fun CalmRoutine() {
+    val colors = MaterialTheme.colorScheme
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 2.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Today's gentle routine",
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
+                color = colors.onSurface
+            )
+            HighlightPill(text = "Mindful pace")
+        }
+
+        RoutineItem(
+            title = "Morning reflection",
+            subtitle = "Ground yourself before the day begins",
+            badge = "2 min",
+            accent = colors.primary.copy(alpha = 0.65f)
+        )
+        RoutineItem(
+            title = "Afternoon gratitude",
+            subtitle = "A quiet pause to recenter",
+            badge = "Gentle ping",
+            accent = colors.secondary.copy(alpha = 0.7f)
+        )
+        RoutineItem(
+            title = "Evening unwind",
+            subtitle = "Slow down with a verse that soothes",
+            badge = "Wind down",
+            accent = colors.primary.copy(alpha = 0.5f)
+        )
+    }
+}
+
+@Composable
+private fun RoutineItem(title: String, subtitle: String, badge: String, accent: Color) {
+    val colors = MaterialTheme.colorScheme
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .width(12.dp)
+                .height(12.dp)
+                .background(
+                    brush = Brush.radialGradient(listOf(accent, Color.Transparent)),
+                    shape = RoundedCornerShape(50)
+                )
+        )
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(2.dp)
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.SemiBold),
+                color = colors.onSurface
+            )
+            Text(
+                text = subtitle,
+                style = MaterialTheme.typography.bodyMedium,
+                color = colors.onSurface.copy(alpha = 0.72f)
+            )
+        }
+        Surface(
+            shape = RoundedCornerShape(50),
+            color = accent.copy(alpha = 0.12f),
+            tonalElevation = 0.dp,
+            shadowElevation = 0.dp
+        ) {
+            Text(
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                text = badge,
+                style = MaterialTheme.typography.labelLarge,
+                color = colors.onSurface
+            )
+        }
+    }
 }
 
 @Composable
@@ -258,27 +385,49 @@ private fun VerseCard() {
     val colors = MaterialTheme.colorScheme
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(20.dp),
-        tonalElevation = 2.dp,
+        shape = RoundedCornerShape(22.dp),
+        tonalElevation = 3.dp,
         shadowElevation = 0.dp,
-        color = colors.surfaceVariant.copy(alpha = 0.35f)
+        color = colors.primary.copy(alpha = 0.08f)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(18.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+                .padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text(
-                text = "Featured verse",
-                style = MaterialTheme.typography.labelLarge,
-                color = colors.onSurface.copy(alpha = 0.65f)
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Featured verse",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = colors.onSurface.copy(alpha = 0.68f)
+                )
+                Box(
+                    modifier = Modifier
+                        .background(
+                            brush = Brush.linearGradient(
+                                listOf(colors.secondary.copy(alpha = 0.6f), colors.primary.copy(alpha = 0.45f))
+                            ),
+                            shape = RoundedCornerShape(50)
+                        )
+                        .padding(horizontal = 12.dp, vertical = 6.dp)
+                ) {
+                    Text(
+                        text = "Quiet Focus",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = colors.onPrimary
+                    )
+                }
+            }
             Text(
                 text = "\"Be still, and know that I am with you.\"",
                 style = MaterialTheme.typography.bodyLarge.copy(
-                    fontSize = 18.sp,
-                    lineHeight = 26.sp,
+                    fontSize = 19.sp,
+                    lineHeight = 28.sp,
                     fontWeight = FontWeight.SemiBold
                 ),
                 color = colors.onSurface,
@@ -297,7 +446,7 @@ private fun VerseCard() {
                 Text(
                     text = "Saved for reflection",
                     style = MaterialTheme.typography.labelLarge,
-                    color = colors.onSurface.copy(alpha = 0.65f),
+                    color = colors.onSurface.copy(alpha = 0.7f),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
