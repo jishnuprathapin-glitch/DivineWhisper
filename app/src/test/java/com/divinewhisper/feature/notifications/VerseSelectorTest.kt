@@ -49,6 +49,31 @@ class VerseSelectorTest {
 
         assertNull(chosen)
     }
+
+    @Test
+    fun allowsLongVersesWhenOnlyLongBucketAvailable() = runBlocking {
+        val longVerse = VerseEntity(
+            id = 3,
+            source = Source.GITA,
+            book = "Chapter", // placeholder
+            chapter = 1,
+            verseNumber = 1,
+            text = "A deliberately longer verse that should remain eligible.",
+            tags = "reflection",
+            popularityScore = 0.5,
+            lengthBucket = "long",
+            checksum = "def"
+        )
+
+        val selector = VerseSelector(
+            verseDao = FakeVerseDao(listOf(longVerse)),
+            shownLogDao = FakeShownLogDao(emptyList())
+        )
+
+        val chosen = selector.pickVerse(setOf(Source.GITA), intentTag = null)
+
+        assertEquals(longVerse.id, chosen?.id)
+    }
 }
 
 private class FakeVerseDao(private val verses: List<VerseEntity>) : VerseDao {

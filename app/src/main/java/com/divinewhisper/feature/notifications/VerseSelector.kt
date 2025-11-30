@@ -13,7 +13,7 @@ class VerseSelector(
     suspend fun pickVerse(sources: Set<Source>, intentTag: String?): Verse? {
         if (sources.isEmpty()) return null
         val excludedIds = shownLogDao.recentVerseIds(limit = 50).ifEmpty { listOf(-1L) }
-        val lengthBuckets = listOf("short", "medium")
+        val lengthBuckets = listOf("short", "medium", "long")
         val candidates = verseDao.getEligibleVerses(
             sources = sources.toList(),
             excludedIds = excludedIds,

@@ -1,6 +1,7 @@
 package com.divinewhisper.feature.notifications
 
 import android.content.Context
+import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.divinewhisper.core.database.DivineWhisperDatabase
@@ -50,7 +51,17 @@ object VerseScheduler {
                 .build()
         }
 
-        workManager.enqueue(requests)
+        val uniqueWork = workManager.beginUniqueWork(
+            UNIQUE_WORK_NAME,
+            ExistingWorkPolicy.REPLACE,
+            requests.first()
+        )
+
+        val continuation = requests
+            .drop(1)
+            .fold(uniqueWork) { chain, request -> chain.then(request) }
+
+        continuation.enqueue()
     }
 
     internal fun computeSlots(
@@ -63,8 +74,6 @@ object VerseScheduler {
     ): List<LocalDateTime> {
         if (frequencyPerDay <= 0) return emptyList()
 
-        // If the current time has reached or passed the end of the window,
-        // schedule for the next day instead of returning an empty plan.
         val scheduleDate = if (now.toLocalTime().isAfter(windowEnd) || now.toLocalTime() == windowEnd) {
             now.toLocalDate().plusDays(1)
         } else {
@@ -72,31 +81,35 @@ object VerseScheduler {
         }
 
         var start = LocalDateTime.of(scheduleDate, windowStart)
-        val end = LocalDateTime.of(scheduleDate, windowEnd)
+        var end = LocalDateTime.of(scheduleDate, windowEnd)
 
         if (now.isAfter(start) && now.isBefore(end)) {
-            start = now.plusMinutes(minGapMinutes.toLong())
+            start = maxOf(start, now.plusMinutes(minGapMinutes.toLong()))
+        }
+
+        if (!start.isBefore(end)) {
+            start = LocalDateTime.of(scheduleDate.plusDays(1), windowStart)
+            end = LocalDateTime.of(scheduleDate.plusDays(1), windowEnd)
         }
 
         val totalMinutes = Duration.between(start, end).toMinutes()
         if (totalMinutes <= 0) return emptyList()
 
-        val interval = (totalMinutes / frequencyPerDay).coerceAtLeast(minGapMinutes.toLong())
+        val interval = (totalMinutes / frequencyPerDay)
+            .coerceAtLeast(minGapMinutes.toLong())
+            .coerceAtLeast(1)
+
         val slots = mutableListOf<LocalDateTime>()
         var cursor = start
 
-        repeat(frequencyPerDay) {
-            var candidate = cursor
+        while (slots.size < frequencyPerDay && !cursor.isAfter(end)) {
             val previous = slots.lastOrNull()
-            if (previous != null) {
-                val nextAllowed = previous.plusMinutes(minGapMinutes.toLong())
-                if (candidate.isBefore(nextAllowed)) {
-                    candidate = nextAllowed
-                }
-            }
+            val minAllowed = previous?.plusMinutes(minGapMinutes.toLong()) ?: cursor
+            var candidate = maxOf(cursor, minAllowed)
 
             candidate = adjustForQuietHours(candidate, quietHours)
-            if (candidate == null || candidate.isAfter(end)) return@repeat
+
+            if (candidate == null || candidate.isAfter(end)) break
 
             slots.add(candidate)
             cursor = candidate.plusMinutes(interval)
