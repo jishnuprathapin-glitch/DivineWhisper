@@ -71,4 +71,22 @@ class VerseSchedulerTest {
         assertEquals(LocalDate.of(2024, 1, 2), slots.first().toLocalDate())
         assertEquals(LocalTime.of(9, 0), slots.first().toLocalTime())
     }
+
+    @Test
+    fun schedulesNextDayWhenAtWindowEnd() {
+        val now = LocalDateTime.of(2024, 1, 1, 20, 0)
+
+        val slots = VerseScheduler.computeSlots(
+            frequencyPerDay = 1,
+            windowStart = LocalTime.of(9, 0),
+            windowEnd = LocalTime.of(20, 0),
+            minGapMinutes = 60,
+            quietHours = null,
+            now = now
+        )
+
+        assertEquals(1, slots.size)
+        assertEquals(LocalDate.of(2024, 1, 2), slots.first().toLocalDate())
+        assertEquals(LocalTime.of(9, 0), slots.first().toLocalTime())
+    }
 }

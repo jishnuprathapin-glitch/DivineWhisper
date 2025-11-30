@@ -63,7 +63,9 @@ object VerseScheduler {
     ): List<LocalDateTime> {
         if (frequencyPerDay <= 0) return emptyList()
 
-        val scheduleDate = if (now.toLocalTime().isAfter(windowEnd)) {
+        // If the current time has reached or passed the end of the window,
+        // schedule for the next day instead of returning an empty plan.
+        val scheduleDate = if (now.toLocalTime().isAfter(windowEnd) || now.toLocalTime() == windowEnd) {
             now.toLocalDate().plusDays(1)
         } else {
             now.toLocalDate()
