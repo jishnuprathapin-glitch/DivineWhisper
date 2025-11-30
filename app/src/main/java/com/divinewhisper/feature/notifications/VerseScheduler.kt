@@ -42,11 +42,23 @@ object VerseScheduler {
 
         val workManager = WorkManager.getInstance(context)
         workManager.cancelAllWorkByTag(WORK_TAG)
-        workManager.enqueueUniqueWork(
+
+        if (requests.isEmpty()) {
+            workManager.cancelUniqueWork(UNIQUE_WORK_NAME)
+            return
+        }
+
+        var continuation = workManager.beginUniqueWork(
             UNIQUE_WORK_NAME,
             ExistingWorkPolicy.REPLACE,
-            requests
+            requests.first()
         )
+
+        requests.drop(1).forEach { request ->
+            continuation = continuation.then(request)
+        }
+
+        continuation.enqueue()
     }
 
     private fun computeSlots(

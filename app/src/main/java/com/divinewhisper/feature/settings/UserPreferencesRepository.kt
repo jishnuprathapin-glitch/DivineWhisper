@@ -18,7 +18,9 @@ class UserPreferencesRepository(private val prefsDao: UserPrefsDao) {
     }
 
     private fun defaultPrefs(): UserPreferences {
-        return UserPreferences()
+        return UserPreferences(
+            sourcesEnabled = Source.values().toSet()
+        )
     }
 }
 
