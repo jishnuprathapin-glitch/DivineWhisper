@@ -14,6 +14,9 @@ This flow gathers only the essentials needed to schedule respectful, personalize
 
 If skipped: enable no sources until the user opts in; set delivery window 09:00–20:00, frequency 2/day, min gap 3h.
 
+Persist answers as the user advances so they can safely background the app without losing state. If the system denies notificatio
+ns, let the user continue onboarding and show a friendly inline banner with a link to system settings instead of blocking.
+
 ## UX notes
 - Show progress (e.g., 1/4) to reduce uncertainty.
 - Keep controls simple (toggles, radio buttons, time pickers); avoid text entry.
@@ -22,3 +25,5 @@ If skipped: enable no sources until the user opts in; set delivery window 09:00�
 - If notifications are disabled system-wide, surface a small inline prompt that links to settings rather than blocking progress.
 - Use friendly defaults in widgets (e.g., pre-select Balanced cadence but leave sources unchecked) so skipping never enrolls the user without consent.
 - Keep copy short, empathetic, and non-judgmental; acknowledge that users can change their mind anytime.
+- Offer a “Remind me later” chip after the summary screen that schedules a single follow-up notification in 24 hours to revisit settings (respecting DND).
+- Include a mini progress indicator and descriptive screen titles so TalkBack users understand where they are in the flow.

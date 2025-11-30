@@ -8,6 +8,7 @@ This document describes how to build **Divine Whisper**, an offline Android app 
 - **Persistence**: Room over a prepackaged SQLite database asset containing vetted verse texts and metadata.
 - **Scheduling**: WorkManager for periodic work; exact alarms (AlarmManager) only if truly needed for precise delivery windows.
 - **Min API**: 24+ recommended to leverage modern scheduling and notification APIs.
+- **DI**: Hilt for wiring repositories, DAOs, workers, and UI use-cases with scoping that respects background work lifecycles.
 
 ### Suggested module/layer split
 - **core/model**: enums (`Source`), data classes (preferences, verse summaries), and date/time helpers.
@@ -16,6 +17,19 @@ This document describes how to build **Divine Whisper**, an offline Android app 
 - **feature/settings**: UI screens for cadence, sources, and quiet hours plus `UserPrefs` use-cases.
 - **feature/onboarding**: the 4-step flow with persistent state that can be resumed if backgrounded.
 - **design-system**: typography, color tokens, and reusable components (verse card, slider rows, time pickers).
+- **app**: entry-point app class to install the bundled database on first launch, register notification channels, and seed default preferences.
+
+### App boot process (offline-first)
+1. `DivineWhisperApp` runs `DatabaseInstaller` to copy the packaged asset to app storage if not present and performs a quick hash check.
+2. Register a `NotificationChannel` for verse delivery and a quieter channel for informational nudges.
+3. Load `UserPrefs` from Room or DataStore; if missing, hydrate with conservative defaults (2/day, 09:00–20:00, 3h gap, no sources enabled).
+4. Kick off a `WorkManager` enqueue to seed the day's deliveries based on the latest preferences.
+
+### Navigation & UI composition
+- Use a single-activity, multi-screen Compose setup with `NavHost` destinations for Home, Settings, Verse Detail, and Onboarding.
+- Keep UI state in `ViewModel`s backed by flows from repositories; expose `UiState` sealed classes for loading, content, and error states.
+- Provide a compact Home screen card showing the next scheduled delivery window, last verse received, and a quick “Send one now” CTA for testing.
+- Surface accessibility affordances (content descriptions, large tap targets) and respect dynamic type scaling in text components.
 
 ## Data model (Room entities)
 - `VerseEntity`: `id`, `source` (`BIBLE`, `QURAN`, `GITA`), `book`, `chapter`, `verse_number`, `text`, `tags`, `popularity_score`, `length_bucket`.
@@ -34,8 +48,29 @@ This document describes how to build **Divine Whisper**, an offline Android app 
    - Reads current preferences and recent history (e.g., last 30 verse IDs).
    - Selects a verse: filter by enabled sources, exclude recent IDs, prefer shorter-to-medium length, sample with a light weight on `popularity_score`, then randomize.
    - Logs the selection, posts the notification, and schedules a replacement if constraints changed.
+   - If the window has elapsed (device was off), post a single make-up notification only when the user opted into "catch-ups"; otherwise drop quietly.
 4. On device reboot, listen for `BOOT_COMPLETED` and re-seed the day's work.
 5. Respect **Do Not Disturb** and battery optimizations; surface a non-blocking prompt if delivery is restricted and back off automatically.
+
+```kotlin
+fun pickVerse(
+    sources: Set<Source>,
+    log: ShownLogDao,
+    verseDao: VerseDao,
+    prefs: UserPrefs
+): VerseEntity? {
+    val recentIds = log.lastShownIds(limit = 30)
+    val candidates = verseDao.getEligibleVerses(
+        sources = sources,
+        excludedIds = recentIds,
+        maxLengthBucket = prefs.maxLengthBucket,
+        tags = prefs.intentTag
+    )
+    return candidates.weightedSample { it.popularityScore }
+}
+```
+
+Use `Constraints` in `WorkRequest` to honor battery saver and network conditions (even though content is offline) so the scheduler behaves politely alongside other apps.
 
 ### Defaults (psychology-informed)
 - Frequency: **2–3 per day** (balanced). Start at 2 if onboarding skipped.

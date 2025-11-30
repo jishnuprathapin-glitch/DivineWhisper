@@ -18,6 +18,7 @@ The app should ship with **locally stored English translations** of at least **2
 6. **Export to SQLite**: build a prepackaged Room database asset with three tables (one per source or a unified table with a `source` column).
 7. **Diffable outputs**: emit stable, sorted CSV/JSON alongside the SQLite asset so reviewers can diff content changes in PRs.
 8. **Reproducible scripts**: pin Python package versions (requirements.txt) or Gradle tool versions; run scripts inside a container to avoid locale drift.
+9. **Versioned artifacts**: include a semantic version and git commit hash in the build log so the shipped DB is traceable to source text commits.
 
 ## Integrity checks (automated)
 - **Row counts**: assert ≥20,000 verses per source before publishing.
@@ -27,10 +28,30 @@ The app should ship with **locally stored English translations** of at least **2
 - **Deterministic build**: make preprocessing scripts idempotent and commit lockfiles/versions of tooling.
 - **Duplicate detection**: assert that (`source`, `book`, `chapter`, `verse_number`) is unique and that verse text is not duplicated across nearby references unless the canonical text requires it.
 - **Audit trail**: retain a build log artifact that records manifest versions, script versions, and hash summaries per source.
+- **Signature check**: store a SHA256 of the final SQLite asset and verify it during app startup before trusting the database.
+
+### Example validation snippets
+Run from `scripts/` inside a controlled container image:
+
+```bash
+python preprocess.py --source raw/ --out assets/packaged_db.db --manifest manifests/
+python diff_manifest.py --old manifests/bible_manifest.csv --new out/manifests/bible_manifest.csv
+sqlite3 assets/packaged_db.db "PRAGMA integrity_check;"
+```
+
+Example hash verification (Python):
+
+```python
+import hashlib, pathlib
+
+db_bytes = pathlib.Path("assets/packaged_db.db").read_bytes()
+print(hashlib.sha256(db_bytes).hexdigest())
+```
 
 ## Delivery integrity at runtime
 - Store a small checksum of the packaged database and validate it on first launch; if invalid, pause scheduling and prompt the user to reinstall.
 - Keep all verse processing on-device; do not fetch or mutate verse text at runtime to avoid drift.
+- When migrating to a new DB version, run a small smoke test (select a verse from each source) before re-scheduling WorkManager.
 
 ## File layout suggestion
 ```
