@@ -5,7 +5,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -13,7 +16,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.divinewhisper.feature.notifications.VerseScheduler
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import com.divinewhisper.ui.theme.DivineWhisperTheme
 
 class MainActivity : ComponentActivity() {
@@ -22,7 +26,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             DivineWhisperTheme {
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    HomeScreen(onScheduleNow = { VerseScheduler.seedDailySchedule(this) })
+                    IntroScreen()
                 }
             }
         }
@@ -30,16 +34,28 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun HomeScreen(onScheduleNow: () -> Unit) {
+private fun IntroScreen() {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Divine Whisper", style = MaterialTheme.typography.headlineMedium)
-        Text(text = "Offline verse notifications", style = MaterialTheme.typography.bodyMedium)
-        Button(onClick = onScheduleNow) {
-            Text(text = "Schedule today's verses")
+        Text(
+            text = "Divine Whisper",
+            style = MaterialTheme.typography.headlineMedium,
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = "An offline-first inspiration companion. Notifications and preferences will be wired up next.",
+            style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+        Button(onClick = { /* TODO: hook into onboarding */ }) {
+            Text(text = "Get started")
         }
     }
 }
