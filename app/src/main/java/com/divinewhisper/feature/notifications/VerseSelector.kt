@@ -15,7 +15,7 @@ class VerseSelector(
         val excludedIds = shownLogDao.recentVerseIds(limit = 50).ifEmpty { listOf(-1L) }
         val lengthBuckets = listOf("short", "medium")
         val candidates = verseDao.getEligibleVerses(
-            sources = sources.map { it.name },
+            sources = sources.toList(),
             excludedIds = excludedIds,
             lengthBuckets = lengthBuckets,
             limit = 25
@@ -23,11 +23,12 @@ class VerseSelector(
         val normalizedTag = intentTag?.trim()?.takeIf { it.isNotEmpty() }?.lowercase()
         val filtered = normalizedTag?.let { tag ->
             candidates.filter { entity ->
-                entity.tags.split(',').map { it.trim() }.any { it.equals(tag, ignoreCase = true) }
+                parseTags(entity.tags).any { it.equals(tag, ignoreCase = true) }
             }
         } ?: candidates
         val chosen = (filtered.ifEmpty { candidates }).randomOrNull(Random.Default)
         return chosen?.let { entity ->
+            val parsedTags = parseTags(entity.tags)
             Verse(
                 id = entity.id,
                 source = entity.source,
@@ -35,10 +36,14 @@ class VerseSelector(
                 chapter = entity.chapter,
                 verseNumber = entity.verseNumber,
                 text = entity.text,
-                tags = entity.tags.split(',').map { it.trim() }.filter { it.isNotBlank() },
+                tags = parsedTags,
                 popularityScore = entity.popularityScore,
                 lengthBucket = entity.lengthBucket
             )
         }
     }
 }
+
+private fun parseTags(raw: String): List<String> = raw.split(',')
+    .map { it.trim() }
+    .filter { it.isNotBlank() }
