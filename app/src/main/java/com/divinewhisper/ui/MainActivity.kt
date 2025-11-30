@@ -16,7 +16,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Button
@@ -59,6 +61,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun IntroScreen() {
     val colors = MaterialTheme.colorScheme
+    val scrollState = rememberScrollState()
 
     Box(
         modifier = Modifier
@@ -66,9 +69,9 @@ private fun IntroScreen() {
             .background(
                 Brush.linearGradient(
                     colors = listOf(
-                        colors.primary.copy(alpha = 0.18f),
+                        colors.primary.copy(alpha = 0.2f),
                         colors.background,
-                        colors.secondary.copy(alpha = 0.14f)
+                        colors.secondary.copy(alpha = 0.18f)
                     ),
                     start = Alignment.TopStart,
                     end = Alignment.BottomEnd
@@ -95,10 +98,16 @@ private fun IntroScreen() {
             colors = listOf(colors.secondary.copy(alpha = 0.2f), Color.Transparent)
         )
 
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState)
+                .padding(bottom = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(18.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            HeroHeader()
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -209,6 +218,105 @@ private fun IntroScreen() {
                                 Text(text = "Preview today's verse")
                             }
                         }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun HeroHeader() {
+    val colors = MaterialTheme.colorScheme
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .shadow(elevation = 24.dp, shape = RoundedCornerShape(26.dp)),
+        shape = RoundedCornerShape(26.dp),
+        colors = CardDefaults.cardColors(containerColor = colors.surface.copy(alpha = 0.95f)),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .background(
+                    brush = Brush.linearGradient(
+                        listOf(
+                            colors.primary.copy(alpha = 0.22f),
+                            colors.secondary.copy(alpha = 0.18f)
+                        )
+                    )
+                )
+                .border(
+                    width = 1.dp,
+                    brush = Brush.linearGradient(
+                        listOf(colors.primary.copy(alpha = 0.24f), colors.secondary.copy(alpha = 0.18f))
+                    ),
+                    shape = RoundedCornerShape(26.dp)
+                )
+                .padding(horizontal = 22.dp, vertical = 20.dp)
+        ) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Text(
+                            text = "Divine Whisper",
+                            style = MaterialTheme.typography.headlineMedium.copy(fontSize = 30.sp),
+                            fontWeight = FontWeight.ExtraBold,
+                            color = colors.onSurface
+                        )
+                        Text(
+                            text = "Gentle verses, graceful pacing, beautifully on-device.",
+                            style = MaterialTheme.typography.bodyMedium.copy(lineHeight = 20.sp),
+                            color = colors.onSurface.copy(alpha = 0.8f)
+                        )
+                    }
+                    HighlightPill(text = "Fresh for today")
+                }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    GradientChip(text = "Offline & private", colors = listOf(colors.primary, colors.secondary))
+                    GradientChip(text = "Lightweight prompts", colors = listOf(colors.secondary, colors.primary))
+                }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Text(
+                            text = "Today's intention",
+                            style = MaterialTheme.typography.labelLarge,
+                            color = colors.onSurface.copy(alpha = 0.7f)
+                        )
+                        Text(
+                            text = "Move through the day with a slow, steady rhythm.",
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
+                            color = colors.onSurface
+                        )
+                    }
+                    Surface(
+                        color = colors.primary.copy(alpha = 0.14f),
+                        shape = RoundedCornerShape(50),
+                        tonalElevation = 0.dp,
+                        shadowElevation = 0.dp
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
+                            text = "Calm mode active",
+                            style = MaterialTheme.typography.labelLarge,
+                            color = colors.onSurface
+                        )
                     }
                 }
             }
