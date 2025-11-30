@@ -23,7 +23,7 @@ class VerseNotificationWorker(
     params: WorkerParameters
 ) : CoroutineWorker(appContext, params) {
 
-    private val database = DivineWhisperDatabase.build(appContext)
+    private val database = DivineWhisperDatabase.getInstance(appContext)
     private val prefsRepository = UserPreferencesRepository(database.userPrefsDao())
     private val selector = VerseSelector(database.verseDao(), database.shownLogDao())
 

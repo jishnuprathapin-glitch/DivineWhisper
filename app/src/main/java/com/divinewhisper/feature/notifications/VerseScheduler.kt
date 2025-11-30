@@ -22,7 +22,7 @@ object VerseScheduler {
     }
 
     fun seedDailySchedule(context: Context) {
-        val database = DivineWhisperDatabase.build(context)
+        val database = DivineWhisperDatabase.getInstance(context)
         val prefsRepository = UserPreferencesRepository(database.userPrefsDao())
         val prefs = runBlocking { prefsRepository.get() }
         val times = computeSlots(

@@ -12,7 +12,7 @@ class VerseSelector(
 ) {
     suspend fun pickVerse(sources: Set<Source>, intentTag: String?): Verse? {
         if (sources.isEmpty()) return null
-        val excludedIds = shownLogDao.recentVerseIds(limit = 50)
+        val excludedIds = shownLogDao.recentVerseIds(limit = 50).ifEmpty { listOf(-1L) }
         val lengthBuckets = listOf("short", "medium")
         val candidates = verseDao.getEligibleVerses(
             sources = sources.map { it.name },
@@ -20,9 +20,10 @@ class VerseSelector(
             lengthBuckets = lengthBuckets,
             limit = 25
         )
-        val filtered = intentTag?.let { tag ->
+        val normalizedTag = intentTag?.trim()?.takeIf { it.isNotEmpty() }?.lowercase()
+        val filtered = normalizedTag?.let { tag ->
             candidates.filter { entity ->
-                entity.tags.split(',').any { it.equals(tag, ignoreCase = true) }
+                entity.tags.split(',').map { it.trim() }.any { it.equals(tag, ignoreCase = true) }
             }
         } ?: candidates
         val chosen = (filtered.ifEmpty { candidates }).randomOrNull(Random.Default)
@@ -34,7 +35,7 @@ class VerseSelector(
                 chapter = entity.chapter,
                 verseNumber = entity.verseNumber,
                 text = entity.text,
-                tags = entity.tags.split(',').filter { it.isNotBlank() },
+                tags = entity.tags.split(',').map { it.trim() }.filter { it.isNotBlank() },
                 popularityScore = entity.popularityScore,
                 lengthBucket = entity.lengthBucket
             )
