@@ -97,87 +97,147 @@ private fun IntroScreen() {
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Card(
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .shadow(elevation = 24.dp, shape = RoundedCornerShape(30.dp)),
-                colors = CardDefaults.cardColors(
-                    containerColor = colors.surface.copy(alpha = 0.97f)
-                ),
-                shape = RoundedCornerShape(30.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+                    .padding(horizontal = 4.dp)
             ) {
-                Column(
+                Box(
+                    modifier = Modifier
+                        .matchParentSize()
+                        .padding(vertical = 12.dp)
+                        .background(
+                            brush = Brush.radialGradient(
+                                colors = listOf(colors.primary.copy(alpha = 0.08f), Color.Transparent),
+                                radius = 520f
+                            ),
+                            shape = RoundedCornerShape(34.dp)
+                        )
+                )
+
+                Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 26.dp, vertical = 30.dp),
-                    verticalArrangement = Arrangement.spacedBy(22.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .shadow(elevation = 24.dp, shape = RoundedCornerShape(30.dp))
+                        .border(
+                            width = 1.dp,
+                            brush = Brush.linearGradient(
+                                listOf(
+                                    colors.primary.copy(alpha = 0.18f),
+                                    colors.secondary.copy(alpha = 0.18f)
+                                )
+                            ),
+                            shape = RoundedCornerShape(30.dp)
+                        ),
+                    colors = CardDefaults.cardColors(
+                        containerColor = colors.surface.copy(alpha = 0.97f)
+                    ),
+                    shape = RoundedCornerShape(30.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
                 ) {
-                    HeaderRow()
-
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(
-                            text = "Divine Whisper",
-                            style = MaterialTheme.typography.headlineMedium.copy(fontSize = 32.sp),
-                            fontWeight = FontWeight.ExtraBold,
-                            textAlign = TextAlign.Center
-                        )
-                        Spacer(modifier = Modifier.height(6.dp))
-                        Text(
-                            text = "Your sanctuary for verses, guided reflection, and gentle reminders that honor your pace.",
-                            style = MaterialTheme.typography.bodyLarge.copy(lineHeight = 24.sp),
-                            textAlign = TextAlign.Center,
-                            color = colors.onSurface.copy(alpha = 0.78f)
-                        )
-                    }
-
-                    VerseCard()
-
-                    ReflectionCard()
-
-                    Divider(color = colors.onSurface.copy(alpha = 0.08f))
-
-                    MetricsRow()
-
-                    CalmRoutine()
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 26.dp, vertical = 30.dp),
+                        verticalArrangement = Arrangement.spacedBy(22.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Button(
-                            modifier = Modifier.weight(1f),
-                            onClick = { /* TODO: hook into onboarding */ },
-                            shape = RoundedCornerShape(16.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = colors.primary,
-                                contentColor = colors.onPrimary
+                        HeaderRow()
+
+                        SerenityHighlights()
+
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(
+                                text = "Divine Whisper",
+                                style = MaterialTheme.typography.headlineMedium.copy(fontSize = 32.sp),
+                                fontWeight = FontWeight.ExtraBold,
+                                textAlign = TextAlign.Center
                             )
-                        ) {
-                            Text(text = "Begin your journey")
+                            Spacer(modifier = Modifier.height(6.dp))
+                            Text(
+                                text = "Your sanctuary for verses, guided reflection, and gentle reminders that honor your pace.",
+                                style = MaterialTheme.typography.bodyLarge.copy(lineHeight = 24.sp),
+                                textAlign = TextAlign.Center,
+                                color = colors.onSurface.copy(alpha = 0.78f)
+                            )
                         }
 
-                        OutlinedButton(
-                            modifier = Modifier.weight(1f),
-                            onClick = { /* TODO: hook into preview */ },
-                            shape = RoundedCornerShape(16.dp),
-                            colors = ButtonDefaults.outlinedButtonColors(
-                                containerColor = colors.secondary.copy(alpha = 0.12f),
-                                contentColor = colors.onSurface
-                            ),
-                            border = ButtonDefaults.outlinedButtonBorder.copy(
-                                brush = Brush.linearGradient(
-                                    listOf(colors.secondary.copy(alpha = 0.4f), colors.primary.copy(alpha = 0.34f))
-                                )
-                            )
+                        VerseCard()
+
+                        ReflectionCard()
+
+                        Divider(color = colors.onSurface.copy(alpha = 0.08f))
+
+                        MetricsRow()
+
+                        CalmRoutine()
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
-                            Text(text = "Preview today's verse")
+                            Button(
+                                modifier = Modifier.weight(1f),
+                                onClick = { /* TODO: hook into onboarding */ },
+                                shape = RoundedCornerShape(16.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = colors.primary,
+                                    contentColor = colors.onPrimary
+                                )
+                            ) {
+                                Text(text = "Begin your journey")
+                            }
+
+                            OutlinedButton(
+                                modifier = Modifier.weight(1f),
+                                onClick = { /* TODO: hook into preview */ },
+                                shape = RoundedCornerShape(16.dp),
+                                colors = ButtonDefaults.outlinedButtonColors(
+                                    containerColor = colors.secondary.copy(alpha = 0.12f),
+                                    contentColor = colors.onSurface
+                                ),
+                                border = ButtonDefaults.outlinedButtonBorder.copy(
+                                    brush = Brush.linearGradient(
+                                        listOf(colors.secondary.copy(alpha = 0.4f), colors.primary.copy(alpha = 0.34f))
+                                    )
+                                )
+                            ) {
+                                Text(text = "Preview today's verse")
+                            }
                         }
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun SerenityHighlights() {
+    val colors = MaterialTheme.colorScheme
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(
+                width = 1.dp,
+                brush = Brush.linearGradient(
+                    listOf(colors.primary.copy(alpha = 0.12f), colors.secondary.copy(alpha = 0.12f))
+                ),
+                shape = RoundedCornerShape(18.dp)
+            )
+            .background(
+                brush = Brush.linearGradient(
+                    listOf(colors.primary.copy(alpha = 0.06f), colors.secondary.copy(alpha = 0.04f))
+                ),
+                shape = RoundedCornerShape(18.dp)
+            )
+            .padding(horizontal = 14.dp, vertical = 12.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        BadgeLabel(text = "Daily calm")
+        GradientChip(text = "Guided focus", colors = listOf(colors.primary, colors.secondary))
+        GradientChip(text = "Soft reminders", colors = listOf(colors.secondary, colors.primary))
     }
 }
 
@@ -222,6 +282,30 @@ private fun HighlightPill(text: String) {
             borderColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.45f)
         )
     )
+}
+
+@Composable
+private fun GradientChip(text: String, colors: List<Color>) {
+    Surface(
+        shape = RoundedCornerShape(14.dp),
+        tonalElevation = 0.dp,
+        shadowElevation = 0.dp
+    ) {
+        Box(
+            modifier = Modifier
+                .background(
+                    brush = Brush.horizontalGradient(colors),
+                    shape = RoundedCornerShape(14.dp)
+                )
+                .padding(horizontal = 12.dp, vertical = 8.dp)
+        ) {
+            Text(
+                text = text,
+                style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold),
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+        }
+    }
 }
 
 @Composable
@@ -415,66 +499,115 @@ private fun VerseCard() {
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(22.dp),
-        tonalElevation = 3.dp,
+        tonalElevation = 0.dp,
         shadowElevation = 0.dp,
-        color = colors.primary.copy(alpha = 0.08f)
+        color = Color.Transparent
     ) {
-        Column(
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Featured verse",
-                    style = MaterialTheme.typography.labelLarge,
-                    color = colors.onSurface.copy(alpha = 0.68f)
+                .background(
+                    brush = Brush.linearGradient(
+                        listOf(
+                            colors.primary.copy(alpha = 0.16f),
+                            colors.secondary.copy(alpha = 0.14f)
+                        )
+                    ),
+                    shape = RoundedCornerShape(22.dp)
                 )
-                Surface(
-                    shape = RoundedCornerShape(50),
-                    color = colors.onSurface.copy(alpha = 0.04f),
-                    shadowElevation = 0.dp
+                .border(
+                    width = 1.dp,
+                    brush = Brush.linearGradient(
+                        listOf(
+                            colors.primary.copy(alpha = 0.25f),
+                            colors.onSurface.copy(alpha = 0.06f)
+                        )
+                    ),
+                    shape = RoundedCornerShape(22.dp)
+                )
+                .padding(20.dp)
+        ) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Box(
+                            modifier = Modifier
+                                .width(8.dp)
+                                .height(32.dp)
+                                .background(
+                                    brush = Brush.verticalGradient(
+                                        listOf(colors.onPrimary.copy(alpha = 0.8f), Color.Transparent)
+                                    ),
+                                    shape = RoundedCornerShape(50)
+                                )
+                        )
+                        Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                            Text(
+                                text = "Featured verse",
+                                style = MaterialTheme.typography.labelLarge,
+                                color = colors.onPrimary
+                            )
+                            Text(
+                                text = "Quiet focus",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = colors.onPrimary.copy(alpha = 0.78f)
+                            )
+                        }
+                    }
+                    Surface(
+                        shape = RoundedCornerShape(50),
+                        color = colors.onPrimary.copy(alpha = 0.14f),
+                        shadowElevation = 0.dp
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                            text = "Listen",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = colors.onPrimary
+                        )
+                    }
+                }
+                Text(
+                    text = "\"Be still, and know that I am with you.\"",
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        fontSize = 19.sp,
+                        lineHeight = 28.sp,
+                        fontWeight = FontWeight.SemiBold
+                    ),
+                    color = colors.onPrimary,
+                    textAlign = TextAlign.Start
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-                        text = "Quiet focus",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = colors.primary.copy(alpha = 0.9f)
+                        text = "Psalm 46:10",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = colors.onPrimary
                     )
+                    Surface(
+                        shape = RoundedCornerShape(50),
+                        color = colors.onPrimary.copy(alpha = 0.12f),
+                        shadowElevation = 0.dp
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                            text = "Saved for reflection",
+                            style = MaterialTheme.typography.labelLarge,
+                            color = colors.onPrimary.copy(alpha = 0.9f),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
                 }
-            }
-            Text(
-                text = "\"Be still, and know that I am with you.\"",
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    fontSize = 19.sp,
-                    lineHeight = 28.sp,
-                    fontWeight = FontWeight.SemiBold
-                ),
-                color = colors.onSurface,
-                textAlign = TextAlign.Start
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Psalm 46:10",
-                    style = MaterialTheme.typography.labelLarge,
-                    color = colors.primary.copy(alpha = 0.9f)
-                )
-                Text(
-                    text = "Saved for reflection",
-                    style = MaterialTheme.typography.labelLarge,
-                    color = colors.onSurface.copy(alpha = 0.7f),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
             }
         }
     }
@@ -485,7 +618,7 @@ private fun ReflectionCard() {
     val colors = MaterialTheme.colorScheme
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = colors.secondary.copy(alpha = 0.12f)),
+        colors = CardDefaults.cardColors(containerColor = colors.secondary.copy(alpha = 0.08f)),
         shape = RoundedCornerShape(18.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
@@ -493,6 +626,17 @@ private fun ReflectionCard() {
             modifier = Modifier.padding(horizontal = 18.dp, vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(4.dp)
+                    .background(
+                        brush = Brush.horizontalGradient(
+                            listOf(colors.primary.copy(alpha = 0.6f), colors.secondary.copy(alpha = 0.35f))
+                        ),
+                        shape = RoundedCornerShape(12.dp)
+                    )
+            )
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -521,27 +665,27 @@ private fun ReflectionCard() {
                 Surface(
                     modifier = Modifier.weight(1f),
                     shape = RoundedCornerShape(12.dp),
-                    color = colors.onSurface.copy(alpha = 0.04f),
+                    color = colors.primary.copy(alpha = 0.08f),
                     shadowElevation = 0.dp
                 ) {
                     Text(
                         modifier = Modifier.padding(vertical = 10.dp, horizontal = 12.dp),
                         text = "Open journal",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = colors.primary
+                        style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold),
+                        color = colors.primary.copy(alpha = 0.96f)
                     )
                 }
                 Surface(
                     modifier = Modifier.weight(1f),
                     shape = RoundedCornerShape(12.dp),
-                    color = colors.primary.copy(alpha = 0.12f),
+                    color = colors.secondary.copy(alpha = 0.18f),
                     shadowElevation = 0.dp
                 ) {
                     Text(
                         modifier = Modifier.padding(vertical = 10.dp, horizontal = 12.dp),
                         text = "Schedule reminder",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = colors.onSurface
+                        style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold),
+                        color = colors.onSurface.copy(alpha = 0.9f)
                     )
                 }
             }
