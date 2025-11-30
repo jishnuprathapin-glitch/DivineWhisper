@@ -108,6 +108,8 @@ private fun IntroScreen() {
         ) {
             HeroHeader()
 
+            GentleWelcomeCard()
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -225,6 +227,136 @@ private fun IntroScreen() {
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun GentleWelcomeCard() {
+    val colors = MaterialTheme.colorScheme
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .shadow(elevation = 20.dp, shape = RoundedCornerShape(22.dp)),
+        shape = RoundedCornerShape(22.dp),
+        colors = CardDefaults.cardColors(containerColor = colors.surface.copy(alpha = 0.92f)),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .background(
+                    brush = Brush.linearGradient(
+                        listOf(colors.primary.copy(alpha = 0.12f), colors.secondary.copy(alpha = 0.1f))
+                    ),
+                    shape = RoundedCornerShape(22.dp)
+                )
+                .padding(horizontal = 20.dp, vertical = 18.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text(
+                        text = "Welcome back, quiet soul",
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                        color = colors.onSurface
+                    )
+                    Text(
+                        text = "Pick up where you left off or enjoy a fresh, slower start.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = colors.onSurface.copy(alpha = 0.76f)
+                    )
+                }
+                HighlightPill(text = "New guidance")
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                QuickActionCard(
+                    modifier = Modifier.weight(1f),
+                    title = "Quiet start",
+                    caption = "1-min breath + verse",
+                    accent = colors.primary
+                )
+                QuickActionCard(
+                    modifier = Modifier.weight(1f),
+                    title = "Listen softly",
+                    caption = "Low-volume playback",
+                    accent = colors.secondary
+                )
+                QuickActionCard(
+                    modifier = Modifier.weight(1f),
+                    title = "Share grace",
+                    caption = "Send a gentle note",
+                    accent = colors.primary.copy(alpha = 0.72f)
+                )
+            }
+
+            Surface(
+                shape = RoundedCornerShape(14.dp),
+                color = colors.onSurface.copy(alpha = 0.04f),
+                tonalElevation = 0.dp,
+                shadowElevation = 0.dp
+            ) {
+                Text(
+                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp),
+                    text = "Tip: set a soft arrival window so reminders land when you can savor them.",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = colors.onSurface.copy(alpha = 0.82f)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun QuickActionCard(modifier: Modifier = Modifier, title: String, caption: String, accent: Color) {
+    val colors = MaterialTheme.colorScheme
+
+    Column(
+        modifier = modifier
+            .background(
+                brush = Brush.verticalGradient(
+                    listOf(accent.copy(alpha = 0.18f), colors.surface)
+                ),
+                shape = RoundedCornerShape(14.dp)
+            )
+            .border(
+                width = 1.dp,
+                color = accent.copy(alpha = 0.28f),
+                shape = RoundedCornerShape(14.dp)
+            )
+            .padding(horizontal = 12.dp, vertical = 10.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.SemiBold),
+            color = colors.onSurface
+        )
+        Text(
+            text = caption,
+            style = MaterialTheme.typography.bodySmall,
+            color = colors.onSurface.copy(alpha = 0.74f)
+        )
+        Surface(
+            shape = RoundedCornerShape(50),
+            color = accent.copy(alpha = 0.18f),
+            tonalElevation = 0.dp,
+            shadowElevation = 0.dp
+        ) {
+            Text(
+                modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                text = "Tap to start",
+                style = MaterialTheme.typography.labelLarge,
+                color = colors.onSurface
+            )
         }
     }
 }
