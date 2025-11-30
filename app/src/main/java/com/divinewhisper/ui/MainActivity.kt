@@ -62,59 +62,59 @@ private fun IntroScreen() {
         modifier = Modifier
             .fillMaxSize()
             .background(
-                Brush.verticalGradient(
+                Brush.linearGradient(
                     colors = listOf(
-                        colors.primary.copy(alpha = 0.22f),
+                        colors.primary.copy(alpha = 0.18f),
                         colors.background,
-                        colors.secondary.copy(alpha = 0.18f)
-                    )
+                        colors.secondary.copy(alpha = 0.14f)
+                    ),
+                    start = Alignment.TopStart,
+                    end = Alignment.BottomEnd
                 )
             )
-                .padding(horizontal = 20.dp, vertical = 26.dp)
+            .padding(horizontal = 20.dp, vertical = 26.dp)
     ) {
-        GlowLayer(
+        AuroraLayer(
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .offset(x = 90.dp, y = (-52).dp),
-            colors = listOf(colors.secondary.copy(alpha = 0.28f), Color.Transparent)
+                .offset(x = 60.dp, y = (-40).dp),
+            colors = listOf(colors.secondary.copy(alpha = 0.32f), Color.Transparent)
         )
-        GlowLayer(
+        AuroraLayer(
             modifier = Modifier
-                .align(Alignment.BottomStart)
-                .offset(x = (-88).dp, y = 90.dp),
-            colors = listOf(colors.primary.copy(alpha = 0.28f), Color.Transparent)
+                .align(Alignment.CenterStart)
+                .offset(x = (-70).dp, y = 30.dp),
+            colors = listOf(colors.primary.copy(alpha = 0.35f), Color.Transparent)
+        )
+        AuroraLayer(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .offset(x = 40.dp, y = 110.dp),
+            colors = listOf(colors.secondary.copy(alpha = 0.2f), Color.Transparent)
         )
 
         Box(
-            modifier = Modifier
-                .fillMaxSize(),
+            modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .shadow(elevation = 22.dp, shape = RoundedCornerShape(28.dp)),
+                    .shadow(elevation = 24.dp, shape = RoundedCornerShape(30.dp)),
                 colors = CardDefaults.cardColors(
-                    containerColor = colors.surface.copy(alpha = 0.96f)
+                    containerColor = colors.surface.copy(alpha = 0.97f)
                 ),
-                shape = RoundedCornerShape(28.dp),
+                shape = RoundedCornerShape(30.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 26.dp, vertical = 30.dp),
-                    verticalArrangement = Arrangement.spacedBy(20.dp),
+                    verticalArrangement = Arrangement.spacedBy(22.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        BadgeLabel(text = "Calm & clarity")
-                        HighlightPill(text = "Offline first")
-                    }
+                    HeaderRow()
 
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
@@ -123,9 +123,9 @@ private fun IntroScreen() {
                             fontWeight = FontWeight.ExtraBold,
                             textAlign = TextAlign.Center
                         )
-                        Spacer(modifier = Modifier.height(4.dp))
+                        Spacer(modifier = Modifier.height(6.dp))
                         Text(
-                            text = "Your daily sanctuary for verses, reflection prompts, and gentle reminders that honor your pace.",
+                            text = "Your sanctuary for verses, guided reflection, and gentle reminders that honor your pace.",
                             style = MaterialTheme.typography.bodyLarge.copy(lineHeight = 24.sp),
                             textAlign = TextAlign.Center,
                             color = colors.onSurface.copy(alpha = 0.78f)
@@ -133,6 +133,8 @@ private fun IntroScreen() {
                     }
 
                     VerseCard()
+
+                    ReflectionCard()
 
                     Divider(color = colors.onSurface.copy(alpha = 0.08f))
 
@@ -161,12 +163,12 @@ private fun IntroScreen() {
                             onClick = { /* TODO: hook into preview */ },
                             shape = RoundedCornerShape(16.dp),
                             colors = ButtonDefaults.outlinedButtonColors(
-                                containerColor = colors.secondary.copy(alpha = 0.14f),
+                                containerColor = colors.secondary.copy(alpha = 0.12f),
                                 contentColor = colors.onSurface
                             ),
                             border = ButtonDefaults.outlinedButtonBorder.copy(
                                 brush = Brush.linearGradient(
-                                    listOf(colors.secondary.copy(alpha = 0.5f), colors.primary.copy(alpha = 0.3f))
+                                    listOf(colors.secondary.copy(alpha = 0.4f), colors.primary.copy(alpha = 0.34f))
                                 )
                             )
                         ) {
@@ -175,6 +177,33 @@ private fun IntroScreen() {
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun HeaderRow() {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
+            BadgeLabel(text = "Calm & clarity")
+            HighlightPill(text = "Offline first")
+        }
+
+        Surface(
+            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+            shape = RoundedCornerShape(50),
+            tonalElevation = 0.dp
+        ) {
+            Text(
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                text = "Mindful companion",
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.primary
+            )
         }
     }
 }
@@ -406,20 +435,16 @@ private fun VerseCard() {
                     style = MaterialTheme.typography.labelLarge,
                     color = colors.onSurface.copy(alpha = 0.68f)
                 )
-                Box(
-                    modifier = Modifier
-                        .background(
-                            brush = Brush.linearGradient(
-                                listOf(colors.secondary.copy(alpha = 0.6f), colors.primary.copy(alpha = 0.45f))
-                            ),
-                            shape = RoundedCornerShape(50)
-                        )
-                        .padding(horizontal = 12.dp, vertical = 6.dp)
+                Surface(
+                    shape = RoundedCornerShape(50),
+                    color = colors.onSurface.copy(alpha = 0.04f),
+                    shadowElevation = 0.dp
                 ) {
                     Text(
-                        text = "Quiet Focus",
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                        text = "Quiet focus",
                         style = MaterialTheme.typography.labelMedium,
-                        color = colors.onPrimary
+                        color = colors.primary.copy(alpha = 0.9f)
                     )
                 }
             }
@@ -456,7 +481,76 @@ private fun VerseCard() {
 }
 
 @Composable
-private fun GlowLayer(modifier: Modifier = Modifier, colors: List<Color>) {
+private fun ReflectionCard() {
+    val colors = MaterialTheme.colorScheme
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = colors.secondary.copy(alpha = 0.12f)),
+        shape = RoundedCornerShape(18.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(horizontal = 18.dp, vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Reflection prompt",
+                    style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.SemiBold),
+                    color = colors.onSurface
+                )
+                Text(
+                    text = "2 min",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = colors.onSurface.copy(alpha = 0.65f)
+                )
+            }
+            Text(
+                text = "What moment felt like a quiet gift today? Breathe it in and keep it close.",
+                style = MaterialTheme.typography.bodyMedium.copy(lineHeight = 20.sp),
+                color = colors.onSurface.copy(alpha = 0.86f)
+            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Surface(
+                    modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(12.dp),
+                    color = colors.onSurface.copy(alpha = 0.04f),
+                    shadowElevation = 0.dp
+                ) {
+                    Text(
+                        modifier = Modifier.padding(vertical = 10.dp, horizontal = 12.dp),
+                        text = "Open journal",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = colors.primary
+                    )
+                }
+                Surface(
+                    modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(12.dp),
+                    color = colors.primary.copy(alpha = 0.12f),
+                    shadowElevation = 0.dp
+                ) {
+                    Text(
+                        modifier = Modifier.padding(vertical = 10.dp, horizontal = 12.dp),
+                        text = "Schedule reminder",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = colors.onSurface
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun AuroraLayer(modifier: Modifier = Modifier, colors: List<Color>) {
     Box(
         modifier = modifier
             .width(260.dp)
@@ -464,7 +558,7 @@ private fun GlowLayer(modifier: Modifier = Modifier, colors: List<Color>) {
             .background(
                 brush = Brush.radialGradient(
                     colors = colors,
-                    radius = 380f
+                    radius = 420f
                 )
             )
     )
