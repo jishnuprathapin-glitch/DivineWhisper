@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.divinewhisper.core.model.Source
+import kotlin.jvm.Volatile
 
 @Database(
     entities = [VerseEntity::class, UserPrefsEntity::class, ShownLogEntity::class],
@@ -19,12 +20,39 @@ abstract class DivineWhisperDatabase : RoomDatabase() {
     abstract fun shownLogDao(): ShownLogDao
 
     companion object {
-        fun build(context: Context): DivineWhisperDatabase {
-            return Room.databaseBuilder(
+        @Volatile
+        private var instance: DivineWhisperDatabase? = null
+
+        fun getInstance(context: Context): DivineWhisperDatabase {
+            return instance ?: synchronized(this) {
+                instance ?: buildDatabase(context.applicationContext).also { instance = it }
+            }
+        }
+
+        private fun buildDatabase(context: Context): DivineWhisperDatabase {
+            val databaseName = "divine_whisper.db"
+            val assetPath = "database/$databaseName"
+
+            val builder = Room.databaseBuilder(
                 context,
                 DivineWhisperDatabase::class.java,
-                "divine_whisper.db"
-            ).createFromAsset("database/divine_whisper.db").build()
+                databaseName
+            )
+
+            val hasBundledDb = runCatching {
+                context.assets.open(assetPath).close()
+                true
+            }.getOrDefault(false)
+
+            val configuredBuilder = if (hasBundledDb) {
+                builder.createFromAsset(assetPath)
+            } else {
+                builder
+            }
+
+            return configuredBuilder
+                .fallbackToDestructiveMigration()
+                .build()
         }
     }
 }
