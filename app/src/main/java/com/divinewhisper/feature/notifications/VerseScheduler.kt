@@ -1,7 +1,6 @@
 package com.divinewhisper.feature.notifications
 
 import android.content.Context
-import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.divinewhisper.core.database.DivineWhisperDatabase
@@ -25,43 +24,36 @@ object VerseScheduler {
         val database = DivineWhisperDatabase.getInstance(context)
         val prefsRepository = UserPreferencesRepository(database.userPrefsDao())
         val prefs = runBlocking { prefsRepository.get() }
+        val now = LocalDateTime.now()
         val times = computeSlots(
             frequencyPerDay = prefs.frequencyPerDay,
             windowStart = prefs.windowStart,
             windowEnd = prefs.windowEnd,
             minGapMinutes = prefs.minGapMinutes,
-            quietHours = prefs.quietHours
+            quietHours = prefs.quietHours,
+            now = now
         )
+
+        val workManager = WorkManager.getInstance(context)
+        workManager.cancelAllWorkByTag(WORK_TAG)
+        workManager.cancelUniqueWork(UNIQUE_WORK_NAME)
+
+        if (times.isEmpty()) return
+
         val requests = times.map { time ->
-            val delayMinutes = Duration.between(LocalDateTime.now(), time).toMinutes().coerceAtLeast(0)
+            val delayMinutes = Duration.between(now, time)
+                .toMinutes()
+                .coerceAtLeast(0)
             OneTimeWorkRequestBuilder<VerseNotificationWorker>()
                 .setInitialDelay(delayMinutes, TimeUnit.MINUTES)
                 .addTag(WORK_TAG)
                 .build()
         }
 
-        val workManager = WorkManager.getInstance(context)
-        workManager.cancelAllWorkByTag(WORK_TAG)
-
-        if (requests.isEmpty()) {
-            workManager.cancelUniqueWork(UNIQUE_WORK_NAME)
-            return
-        }
-
-        var continuation = workManager.beginUniqueWork(
-            UNIQUE_WORK_NAME,
-            ExistingWorkPolicy.REPLACE,
-            requests.first()
-        )
-
-        requests.drop(1).forEach { request ->
-            continuation = continuation.then(request)
-        }
-
-        continuation.enqueue()
+        workManager.enqueue(requests)
     }
 
-    private fun computeSlots(
+    internal fun computeSlots(
         frequencyPerDay: Int,
         windowStart: LocalTime,
         windowEnd: LocalTime,
@@ -125,8 +117,7 @@ object VerseScheduler {
         }
 
         return if (!candidate.isBefore(quietStart) && candidate.isBefore(quietEnd)) {
-            val shifted = quietEnd
-            if (shifted.toLocalDate() == candidate.toLocalDate()) shifted else null
+            quietEnd
         } else {
             candidate
         }
