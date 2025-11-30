@@ -19,3 +19,6 @@ If skipped: enable no sources until the user opts in; set delivery window 09:00â
 - Keep controls simple (toggles, radio buttons, time pickers); avoid text entry.
 - Provide short helper text explaining that all content lives on-device and can be changed anytime in Settings.
 - After completion, summarize choices and offer quick actions: "Edit sources", "Adjust times", "Reduce frequency".
+- If notifications are disabled system-wide, surface a small inline prompt that links to settings rather than blocking progress.
+- Use friendly defaults in widgets (e.g., pre-select Balanced cadence but leave sources unchecked) so skipping never enrolls the user without consent.
+- Keep copy short, empathetic, and non-judgmental; acknowledge that users can change their mind anytime.
